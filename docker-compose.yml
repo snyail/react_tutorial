@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    ports:
+      - "80:80"
+
+  # add after make react env
+  # backend:
+  #   image: your-backend-image
+  #   container_name: backend
