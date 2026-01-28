@@ -10,6 +10,13 @@ services:
     ports:
       - "80:80"
 
+  ws:
+    build: 
+      context: .
+      dockerfile: docker/webserver/Dockerfile
+    ports:
+      - "3001:3001"
+
   # add after make react env
   # backend:
   #   image: your-backend-image
