@@ -1,5 +1,6 @@
 import "./style.css";
 import { useState, memo } from "react";
+import Game_component from "./OneGameContent/components/Game"
 
 type SquareValue = "X" | "O" | null;
 
@@ -94,6 +95,19 @@ export default function Game() {
     setXIsNext(!xIsNext);
   }
 
+  function joinGame() {
+    return (
+      <div className="game">
+        <div className="game-board">
+          <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        </div>
+        <div className="game-info">
+          <ol>{moves}</ol>
+        </div>
+      </div>
+    );
+  }
+
   function jumpTo(nextMove:number) {
     setCurrentMove(nextMove);
     setXIsNext(nextMove % 2 === 0);
@@ -114,12 +128,16 @@ export default function Game() {
   });
 
   return (
-    <div className="game">
-      <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+    <div>
+      <div>
+        <button onClick={joinGame} >
+          ゲームに参加する
+        </button>
       </div>
-      <div className="game-info">
-        <ol>{moves}</ol>
+      <div>
+        <Game_component>
+          
+        </Game_component>
       </div>
     </div>
   );
