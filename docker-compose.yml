@@ -10,6 +10,16 @@ services:
     ports:
       - "80:80"
 
+  ws:
+    build: 
+      context: .
+      dockerfile: docker/webserver/Dockerfile
+    volumes:
+      - ./websocketserver:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+
   # add after make react env
   # backend:
   #   image: your-backend-image
