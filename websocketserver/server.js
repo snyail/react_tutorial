@@ -1,4 +1,4 @@
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
 
 const PORT = 3001;
 const wss = new WebSocketServer({ port: PORT });
@@ -13,7 +13,7 @@ wss.on("connection", (socket) => {
 
     // 全員に送信（ブロードキャスト）
     wss.clients.forEach((client) => {
-      if (client.readyState === socket.OPEN) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(data.toString());
       }
     });
