@@ -7,7 +7,7 @@ import { useWebRTC } from "../../hooks/useWebRTC";
 
 export default function Game() {
     // use WebRTC
-    const { connect, send } = useWebRTC();
+    const { connect, send, connected } = useWebRTC();
 
     const [xIsNext, setXIsNext] = useState(true);
     const [history, setHistory] = useState<SquareValue[][]>([
@@ -46,10 +46,14 @@ export default function Game() {
             </div>
             <div>
                 <button onClick={connect}>接続する</button>
-                <button onClick={() => send("hello from react")}>
+                <button onClick={() => send("hello from react")} disabled={!connected}>
                     送信
                 </button>
             </div>
+
+            <p>
+            状態: {connected ? "接続中" : "未接続"}
+            </p>
         </>
     );
 }

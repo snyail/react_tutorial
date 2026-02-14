@@ -14,9 +14,6 @@ services:
     build: 
       context: .
       dockerfile: docker/webserver/Dockerfile
-    volumes:
-      - ./websocketserver:/app
-      - /app/node_modules
     ports:
       - "3001:3001"
 

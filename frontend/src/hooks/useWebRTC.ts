@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 type Signal =
   | { type: "role"; isInitiator: boolean }
@@ -11,14 +11,19 @@ export function useWebRTC() {
   const peerRef = useRef<RTCPeerConnection | null>(null);
   const channelRef = useRef<RTCDataChannel | null>(null);
 
+  const [connected, setConnected] = useState(false);
+
   const isInitiatorRef = useRef<boolean | null>(null);
   const pendingCandidatesRef = useRef<RTCIceCandidateInit[]>([]);
 
   /* ------------------ 初期化 ------------------ */
 
   function connect() {
+    console.log('start connect');
     createPeer();
+    console.log('create peer done');
     createSocket();
+    console.log('create socket done');
   }
 
   function createPeer() {
@@ -77,6 +82,7 @@ export function useWebRTC() {
 
   // roleの決定
   async function handleRole(isInitiator: boolean) {
+    console.log("[ROLE]", isInitiator ? "initiator" : "receiver");
     isInitiatorRef.current = isInitiator;
 
     // initiator側なら処理をおこす
@@ -103,6 +109,7 @@ export function useWebRTC() {
   // anserを自分の中に準備
   // anserをsignalとして送信
   async function handleOffer(offer: RTCSessionDescriptionInit) {
+    console.log("[OFFER RECEIVED]");
     const peer = peerRef.current!;
     await peer.setRemoteDescription(offer);
 
@@ -118,6 +125,7 @@ export function useWebRTC() {
 
   // anserが送られてきた場合にinitiater側でanserとして送られてきたものを自分の中にセット
   async function handleAnswer(answer: RTCSessionDescriptionInit) {
+    console.log("[ANSWER RECEIVED]");
     await peerRef.current!.setRemoteDescription(answer);
   }
 
@@ -145,9 +153,15 @@ export function useWebRTC() {
 
     channel.onopen = () => {
       console.log("P2P connected");
+      setConnected(true);
+    };
+
+    channel.onclose = () => {
+      setConnected(false);
     };
 
     channel.onmessage = (e) => {
+    console.log("[WS RECEIVE]", e.data);
       console.log("received:", e.data);
     };
   }
@@ -155,14 +169,17 @@ export function useWebRTC() {
   /* ------------------ util ------------------ */
 
   function sendSignal(data: Signal) {
+    console.log("[WS SEND]", data);
     socketRef.current?.send(JSON.stringify(data));
   }
 
   function send(message: string) {
-    if (channelRef.current?.readyState === "open") {
-      channelRef.current.send(message);
+    if (!connected) {
+      console.warn("まだ接続されていません");
+      return;
     }
+    channelRef.current?.send(message);
   }
 
-  return { connect, send };
+  return { connect, send, connected };
 }
