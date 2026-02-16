@@ -5,19 +5,12 @@ services:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
-    volumes:
-      - ./frontend:/app
     ports:
       - "80:80"
 
   ws:
-    build: 
+    build:
       context: .
       dockerfile: docker/webserver/Dockerfile
     ports:
       - "3001:3001"
-
-  # add after make react env
-  # backend:
-  #   image: your-backend-image
-  #   container_name: backend

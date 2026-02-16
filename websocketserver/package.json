@@ -1,14 +1,13 @@
 {
   "name": "websocket-server",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node server.ts"
   },
   "dependencies": {
-    "ws": "^8.17.0"
+    "ws": "^8.17.0",
+    "ts-node": "^10.x"
   },
   "devDependencies": {
     "@types/ws": "^8.5.10",
